@@ -11,3 +11,17 @@ HHA 504 // Week 6 // Assignment 5
 
 ## after creating our machine and starting it, we can turn our attention to creating a custom traffic rule so that we can properly connect to the vm from other machines via mysql to populate databases within that vm. Within Azure, having navigated to the virtual machines section, we can click on the machine we intend to use for the exercise. Within the left side bar that appears, we navigate to networking under settings. We can then simply click Add Inbound Port Rule. For source, we can keep Any. For source port ranges, we type '*' to signify All. For destination port ranges, we type '3306' for mysql access specifically. The rest of the parameters can be kept as default values. Now our vm is ready for inbound connections through port 3306.
 
+## Next we prep the vm for table insertion. Before we can remotely insert a table via mysql, we first need to create a database in mysql with an empty table. Let's access our vm. For Azure we connect via ssh. We can open our terminals and cd into our .ssh directory. From there, we can use 'ls -l' to view available files. We can then chmod 400 the appropriate .pem or .cer file. From there, we can connect with the appropriate command line.
+
+## Once in our virtual environment, we can install mysql. As best practice, we run 'sudo apt-get update' to ensure all packages are up-to-date. Then, we can use 'sudo apt-get install mysql-server mysql-client' to acquire both the server and client in one fell swoop.
+
+## Now that we have acquired mysql, we can go ahead and access it. Because there are no accessible user accounts by default, we will have to use root user account initially. we can access mysql via root with 'sudo mysql'. From here, we'll want to create a new user. For the purposes of this exercise, we can grant this user all the permissions of a root user without restrictions. we can use command CREATE USER to create a new user. the parameters are username followed by @ followed with domain address. In this case we can use '%' for wild card address values to simplify the process. Following the parameters is IDENTIFIED BY followed by a password. Command structure would look like: 'CREATE USER 'user'@'%' IDENTIFIED BY 'password''. Commands are not case sensitive. 
+
+## To check that we have successfully created a user, we can perform query: 'SELECT user FROM mysql.user'
+
+## From there, we want to grant the new user we have created with root privileges. This can be accomplished with 'GRANT ALL PRIVILEGES on *.* to 'user'@'%' WITH GRANT PRIVILEGES.' *.* signifies that the user in question will be granted all privileges regarding any and all future databases existing within the mysql. WITH GRANT PRIVILEGES allows the user in question to grant privileges to other users as well.
+
+## To check that we have properly elevated the new user, we can use 'SELECT * FROM mysql.user \G'
+## Here we use \G instead of ; or \g to end the query because \G will present the information in an orderly list-like format. We can simply search through the users and find the desired ones and view privilege statuses.
+
+## 

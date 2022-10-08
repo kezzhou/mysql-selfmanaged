@@ -1,34 +1,41 @@
+#### Terminal Commands ####
+
+'pip3 install python-dotenv'
+
+'pip3 install requirements.txt'
+
 #### Imports ####
 
 from sqlalchemy import create_engine
 
 import pandas as pd 
 
+from dotenv import dotenv_values
 
 
 
 #### Create Connection To VM Env ####
 
+config = dotenv_values('.env') # this is where our mysql user and password is stored
+
 MYSQL_HOSTNAME = '20.100.177.191' ## we'll put the ip address of the Azure vm we spun up for this repo
 
-MYSQL_USER = 'zhou'
+MYSQL_DATABASE = 'cybersalaries'
 
-MYSQL_PASSWORD = 'ahi2022'
+connection_string = f'mysql+pymysql://{config["MYSQL_USER"]}:{config["MYSQL_PASSWORD"]}@{MYSQL_HOSTNAME}/{MYSQL_DATABASE}' ## we can string together all the components to form the connection string
+connection_string
 
-MYSQL_DATABASE = 'isaac'
-
-connection_string = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOSTNAME}/{MYSQL_DATABASE}'
-connection_string 
-
-db = create_engine(connection_string)
+db = create_engine(connection_string) ## create_engine allows us to link the database via mysql
 db
 
-query = 'select * from isaac.table1;'
-query
+query = 'select * from cybersalaries.salaries;' ## let's write a query to view information from our existing database table that we created in Azure
 
-df = pd.read_sql(query, con=db)
+df = pd.read_sql(query, con=db) ## with the connection we created earlier and pandas read_sql command, we can store the query in a df and execute
+df ## we see two columns, year and salary. the contents of the table are empty.
+## this is expected as we have created the table with those two columns
 
-real_df = pd.read_csv('https://raw.githubusercontent.com/hantswilliams/HHA-507-2022/main/descriptive/example1/data/data.csv')
-real_df
+df = pd.read_csv('Cyber_salaries.csv') ## now let's redefine df as the csv we have pulled off kaggle
 
-real_df.to_sql('fake_table', con=db, if_exists='replace')
+df ## taking a peek at contents
+
+df.to_sql('salaries', con=db, if_exists='replace') ## pushing the df to a table called salaries, which if exists, will be replaced. In this case it does already exist, but will be replaced with the new info we push through

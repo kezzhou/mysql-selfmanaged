@@ -15,13 +15,27 @@ HHA 504 // Week 6 // Assignment 5
 
 ## Once in our virtual environment, we can install mysql. As best practice, we run 'sudo apt-get update' to ensure all packages are up-to-date. Then, we can use 'sudo apt-get install mysql-server mysql-client' to acquire both the server and client in one fell swoop.
 
-## Now that we have acquired mysql, we can go ahead and access it. Because there are no accessible user accounts by default, we will have to use root user account initially. we can access mysql via root with 'sudo mysql'. From here, we'll want to create a new user. For the purposes of this exercise, we can grant this user all the permissions of a root user without restrictions. we can use command CREATE USER to create a new user. the parameters are username followed by @ followed with domain address. In this case we can use '%' for wild card address values to simplify the process. Following the parameters is IDENTIFIED BY followed by a password. Command structure would look like: 'CREATE USER 'user'@'%' IDENTIFIED BY 'password''. Commands are not case sensitive. 
+## Now that we have acquired mysql, we can go ahead and access it. Because there are no accessible user accounts by default, we will have to use root user account initially. we can access mysql via root with 'sudo mysql'. From here, we'll want to create a new user. For the purposes of this exercise, we can grant this user all the permissions of a root user without restrictions. we can use command CREATE USER to create a new user. the parameters are username followed by @ followed with domain address. In this case we can use '%' for wild card address values to simplify the process. Following the parameters is IDENTIFIED BY followed by a password. Command structure would look like: 'CREATE USER 'user'@'%' IDENTIFIED BY 'password';'. Commands are not case sensitive. 
 
-## To check that we have successfully created a user, we can perform query: 'SELECT user FROM mysql.user'
+## To check that we have successfully created a user, we can perform query: 'SELECT user FROM mysql.user;'
 
 ## From there, we want to grant the new user we have created with root privileges. This can be accomplished with 'GRANT ALL PRIVILEGES on *.* to 'user'@'%' WITH GRANT PRIVILEGES.' *.* signifies that the user in question will be granted all privileges regarding any and all future databases existing within the mysql. WITH GRANT PRIVILEGES allows the user in question to grant privileges to other users as well.
 
 ## To check that we have properly elevated the new user, we can use 'SELECT * FROM mysql.user \G'
 ## Here we use \G instead of ; or \g to end the query because \G will present the information in an orderly list-like format. We can simply search through the users and find the desired ones and view privilege statuses.
 
-## 
+## Now let's create a database to populate with an empty table. First let's log into the account we've just created and elevated. We can type 'exit' in mysql to exit back out to the base vm if necessary. To log into an account we can follow structure: 'mysql -u user -p'. -u stands for username and -p stands for password. After entering command, we will be prompted to enter the appropriate password.
+
+## Once we have access to the account, we can check existing databases with: 'show databases;' There should be a few default databases. Let's create one of our own. We have accomplished this with 'CREATE DATABASE cybersalaries;' as the name is relevant to the csv we will use to populate it. We can check that our command went through with 'SHOW DATABASES;'
+
+## We have to be using our new database to create a table within it. Our command will reflect that: 'USE cybersalaries' to shift into it. To create a table, we need to define at least a single column. We have chosen to use:
+## 'CREATE TABLE salaries (
+##    year int,
+##    salary varchar(255)
+## );
+
+## The columns we have chosen to define are not too relevant as they will be populated by information we pull from the csv.
+
+## For pushing csv data into the database remotely, refer to the dbconnect.py file.
+
+## NOTE: requirements.txt contains all necessary components for this exercise, including pymysql, sqlalchemy and dotenv

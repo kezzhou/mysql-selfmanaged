@@ -16,13 +16,9 @@ from dotenv import dotenv_values
 
 #### Create Connection To VM Env ####
 
-config = dotenv_values('.env') # this is where our mysql user and password is stored
+config = dotenv_values('.env') # this is where our mysql hostname, user, password, and database is stored
 
-MYSQL_HOSTNAME = '20.100.177.191' ## we'll put the ip address of the Azure vm we spun up for this repo
-
-MYSQL_DATABASE = 'cybersalaries'
-
-connection_string = f'mysql+pymysql://{config["MYSQL_USER"]}:{config["MYSQL_PASSWORD"]}@{MYSQL_HOSTNAME}/{MYSQL_DATABASE}' ## we can string together all the components to form the connection string
+connection_string = f'mysql+pymysql://{config["MYSQL_USER"]}:{config["MYSQL_PASSWORD"]}@{config["MYSQL_HOSTNAME"]}/{config["MYSQL_DATABASE"]}' ## we can string together all the components to form the connection string
 connection_string
 
 db = create_engine(connection_string) ## create_engine allows us to link the database via mysql
